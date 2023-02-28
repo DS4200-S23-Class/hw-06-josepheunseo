@@ -1,4 +1,4 @@
-// set the dimensions and margins of the graph
+// set the dimensions and margins of the graphs
 const margin = {top: 20, right: 20, bottom: 30, left: 40};
 const width = 400;
 const height = 400;
@@ -150,6 +150,14 @@ d3.csv('data/iris.csv', (d) => {
     .attr("dy", ".35em")
     .style("text-anchor", "end")
     .text(function(d) { return d; });
+
+	// Add brushing
+	svgScatter2.call(d3.brush()                 
+		.extent([[0,0], [width, height]])
+		.on("start brush", () => {
+			console.log(d3.event.selection)
+		})
+	);
 })
 
 // create the data for the bar chart
