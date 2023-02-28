@@ -11,17 +11,7 @@ h2 {
 }
 
 .container {
-  display: flex;
-}
-
-.left-column {
-  width: 60%;
-}
-
-.right-column {
-  width: 40%;
-}
-
-.point {
-  fill: black;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
