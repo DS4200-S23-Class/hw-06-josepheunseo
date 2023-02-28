@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang='en'>
-
-
 <head>
   <meta charset='utf-8'>
   <title>hw-06</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="script.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
-  
   <h1>hw-06 - D3 Brushing & Linking</h1>
-  
- 
-    <h2>Acknowledgements</h2>
-    <ul>
-      <li>
-        <a href="https://www.fluidencodings.com/teaching-materials/cc-for-the-web/v1/page.php?pid=svg">Intro to D3 - Creative Coding for the Web</a>
-      </li>
-      <li>
-        <a href="https://www.d3-graph-gallery.com/intro_d3js.html ">Intro to D3 in 10 basic examples</a>
-      </li>
-    </ul>
+  <div class="columns">
+    <div class="column">
+      <h3>Petal_Length vs Sepal_Length</h3>
+      <svg id="length-scatterplot"></svg>
+    </div>
+    <div class="column">
+      <h3>Petal_Width vs Sepal_Width</h3>
+      <svg id="width-scatterplot"></svg>
+    </div>
+    <div class="column">
+      <h3>Counts of Species</h3>
+      <svg id="bar-chart"></svg>
+    </div>
+  </div>
+  <h2>Acknowledgements</h2>
+  <ul>
+    <li>
+      <a href="https://www.fluidencodings.com/teaching-materials/cc-for-the-web/v1/page.php?pid=svg">Intro to D3 - Creative Coding for the Web</a>
+    </li>
+    <li>
+      <a href="https://www.d3-graph-gallery.com/intro_d3js.html ">Intro to D3 in 10 basic examples</a>
+    </li>
+  </ul>
+  <script src="js/d3.v6.1.1/d3.min.js"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>
