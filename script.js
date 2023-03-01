@@ -88,8 +88,8 @@ const svgScatter2 = d3.select('#width-scatterplot')
 // load data and scatterplot
 d3.csv('data/iris.csv', (d) => {
 	// coerce data to numbers
-	d.x = +d.Petal_Width;
-	d.y = +d.Sepal_Width;
+	d.x = +d.Sepal_Width;
+	d.y = +d.Petal_Width;
 	d.id = +d.id;
 	return d;
 }).then((data) => {
