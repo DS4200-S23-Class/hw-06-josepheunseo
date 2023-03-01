@@ -61,23 +61,6 @@ d3.csv('data/iris.csv', (d) => {
 		.style('fill', function(d) {return color(d.Species); })
 		.style('opacity', 0.5);
 
-	// add legend
-  const legend = svgScatter.selectAll(".legend")
-    .data(species)
-    .enter().append("g")
-    .attr("class", "legend")
-    .attr("transform", function(d, i) { return "translate(20," + (20 + i * 20) + ")"; });
-  legend.append("rect")
-    .attr("x", margin.left)
-    .attr("width", 18)
-    .attr("height", 18)
-    .style("fill", color);
-  legend.append("text")
-    .attr("x", margin.left + 20)
-    .attr("y", 9)
-    .attr("dy", ".35em")
-    .style("text-anchor", "start")
-    .text(function(d) { return d; });
 })
 
 // create SVG element
@@ -134,24 +117,6 @@ d3.csv('data/iris.csv', (d) => {
 		.attr('r', radius)
 		.style('fill', function(d) {return color(d.Species); })
 		.style('opacity', 0.5);
-
-	// add legend
-  const legend = svgScatter2.selectAll(".legend")
-    .data(species)
-    .enter().append("g")
-    .attr("class", "legend")
-    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-  legend.append("rect")
-    .attr("x", width - 18)
-    .attr("width", 18)
-    .attr("height", 18)
-    .style("fill", color);
-  legend.append("text")
-    .attr("x", width - 24)
-    .attr("y", 9)
-    .attr("dy", ".35em")
-    .style("text-anchor", "end")
-    .text(function(d) { return d; });
 
 	// add brush function and event listener
 	svgScatter2.call(d3.brush()                 
