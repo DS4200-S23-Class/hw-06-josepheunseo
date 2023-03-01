@@ -4,7 +4,7 @@ const width = 400;
 const height = 400;
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
-const radius = 3;
+const radius = 4;
 
 // create SVG element
 const svgScatter = d3.select('#length-scatterplot')
@@ -16,6 +16,7 @@ d3.csv('data/iris.csv', (d) => {
 	// coerce data to numbers
 	d.x = +d.Petal_Length;
 	d.y = +d.Sepal_Length;
+	d.id = +d.id;
 	return d;
 }).then((data) => {
 	
@@ -25,7 +26,7 @@ d3.csv('data/iris.csv', (d) => {
 	// create color mapping
   const color = d3.scaleOrdinal()
     .domain(species)
-    .range(["#1f77b4", "#ff7f0e", "#2ca02c"]);
+    .range(["blue", "purple", "green"]);
 
 	// create scales
 	const xScale = d3.scaleLinear()
@@ -89,6 +90,7 @@ d3.csv('data/iris.csv', (d) => {
 	// coerce data to numbers
 	d.x = +d.Petal_Width;
 	d.y = +d.Sepal_Width;
+	d.id = +d.id;
 	return d;
 }).then((data) => {
 	
@@ -98,7 +100,7 @@ d3.csv('data/iris.csv', (d) => {
 	// create color mapping
   const color = d3.scaleOrdinal()
     .domain(species)
-    .range(["#1f77b4", "#ff7f0e", "#2ca02c"]);
+    .range(["blue", "purple", "green"]);
 
 	// create scales
 	const xScale = d3.scaleLinear()
@@ -117,7 +119,7 @@ d3.csv('data/iris.csv', (d) => {
 	svgScatter2.append('g')
 		.attr('transform', `translate(${margin.left}, ${innerHeight + margin.top})`)
 		.call(xAxis);
-
+	
 	svgScatter2.append('g')
 		.attr('transform', `translate(${margin.left}, ${margin.top})`)
 		.call(yAxis);
@@ -151,20 +153,45 @@ d3.csv('data/iris.csv', (d) => {
     .style("text-anchor", "end")
     .text(function(d) { return d; });
 
-	// Add brushing
+	// add brush function and event listener
 	svgScatter2.call(d3.brush()                 
 		.extent([[0,0], [width, height]])
-		.on("start brush", () => {
-			console.log(d3.event.selection)
+		.on("start brush", (e) => {
+			const extent = e.selection;
+			if (extent) {
+				// Get the selected points in the second scatterplot
+				const [[x0, y0], [x1, y1]] = extent;
+				const selectedIds = data.filter(d => 
+					xScale(d.x) + margin.left >= x0 && xScale(d.x) + margin.left <= x1 &&
+					yScale(d.y) + margin.top >= y0 && yScale(d.y) + margin.top <= y1
+				).map(d => d.id);
+
+				// Highlight the corresponding points in the first scatterplot
+				svgScatter.selectAll("circle")
+    			.attr("stroke", d => selectedIds.includes(d.id) ? "orange" : "none")
+    			.attr("stroke-width", d => selectedIds.includes(d.id) ? "2" : "none")
+    			.style("opacity", d => selectedIds.includes(d.id) ? "1" : "0.5");
+				
+				svgScatter2.selectAll("circle")
+    			.attr("stroke", d => selectedIds.includes(d.id) ? "orange" : "none")
+    			.attr("stroke-width", d => selectedIds.includes(d.id) ? "2" : "none")
+    			.style("opacity", d => selectedIds.includes(d.id) ? "1" : "0.5");
+
+				// Highlight the corresponding bars in the bar chart
+				svgBar.selectAll("rect")
+					.attr("stroke", d => selectedIds.some(item => d.ids.includes(item)) ? "orange" : "none")
+					.attr("stroke-width", d => selectedIds.some(item => d.ids.includes(item))  ? "4" : "none")
+					.style("opacity", d => selectedIds.some(item => d.ids.includes(item))  ? "1" : "0.8");
+			}
 		})
 	);
-})
+});
 
 // create the data for the bar chart
 const data = [
-  { species: "setosa", count: 50 },
-  { species: "versicolor", count: 50 },
-  { species: "virginica", count: 50 }
+  { species: "setosa", count: 50, ids: Array.from({length: 50}, (_, i) => i + 1) },
+  { species: "versicolor", count: 50, ids: Array.from({length: 50}, (_, i) => i + 51) },
+  { species: "virginica", count: 50, ids: Array.from({length: 50}, (_, i) => i + 101) }
 ];
 
 // create SVG element for bar chart
@@ -175,7 +202,7 @@ const svgBar = d3.select("#bar-chart")
 // create color mapping
 const color = d3.scaleOrdinal()
   .domain(["setosa", "versicolor", "virginica"])
-  .range(["#1f77b4", "#ff7f0e", "#2ca02c"]);
+  .range(["blue", "purple", "green"]);
 
 // create scales
 const xScale = d3.scaleBand()
@@ -209,5 +236,6 @@ svgBar.selectAll("rect")
   .attr("y", d => yScale(d.count) + margin.top)
   .attr("width", xScale.bandwidth())
   .attr("height", d => innerHeight - yScale(d.count))
-  .style("fill", d => color(d.species));
+  .style("fill", d => color(d.species))
+	.style("opacity", 0.8);
 
